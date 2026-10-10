@@ -1,0 +1,51 @@
+name: Build and Deploy Docs
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  publish-docs:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install uv and Python
+        uses: astral-sh/setup-uv@v10.2.0
+        with:
+          version: "0.12.1"
+          python-version: "3.14"
+          enable-cache: true
+
+      - name: Install dependencies
+        run: make install
+
+      - name: Build documentation
+        run: make docs
+
+      - name: Setup pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload documentation as artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './site'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

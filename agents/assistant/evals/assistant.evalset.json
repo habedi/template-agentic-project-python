@@ -1,0 +1,42 @@
+{
+  "eval_set_id": "assistant_basic_eval",
+  "name": "Assistant Basic Evaluation",
+  "description": "Basic test cases for math, time, and greetings",
+  "eval_cases": [
+    {
+      "evalId": "calc_multiplication_test",
+      "conversation": [
+        {
+          "userContent": {
+            "parts": [
+              {
+                "text": "What is 15 * 4 + 20?"
+              }
+            ]
+          },
+          "finalResponse": {
+            "parts": [
+              {
+                "text": "15 * 4 + 20 = 80"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "evalId": "greeting_test",
+      "conversation": [
+        {
+          "userContent": {
+            "parts": [
+              {
+                "text": "Hello, who are you?"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

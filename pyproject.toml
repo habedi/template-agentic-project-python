@@ -1,0 +1,161 @@
+[project]
+name = "template-agentic-project"
+version = "0.1.0-alpha.1"
+description = "A template for developing AI agents using Google's Agent Development Kit (ADK)"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [
+    { name = "Hassan Abedi", email = "hassan.abedi.t@gmail.com" }
+]
+maintainers = [
+    { name = "Hassan Abedi", email = "hassan.abedi.t@gmail.com" }
+]
+keywords = ["agent", "ai", "google-adk", "gemini", "agentic-ai", "llm", "workflows"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence"
+]
+
+requires-python = ">=3.11,<4.0"
+dependencies = [
+    "google-adk>=2.11.0",
+    "litellm>=1.75.5",
+    "python-dotenv>=1.0.1",
+    "pydantic>=2.0.0",
+    "huggingface-hub>=0.34,<2",
+    "llama-cpp-python>=0.3.35",
+    "starlette-context>=0.3.6",
+    "sse-starlette>=2.0.0"
+]
+
+[project.optional-dependencies]
+cpu = ["llama-cpp-python>=0.3.35"]
+cuda = [
+    "llama-cpp-python==0.3.36",
+    "nvidia-cublas-cu12>=12.5,<12.6; sys_platform == 'linux' and platform_machine == 'x86_64'",
+    "nvidia-cuda-runtime-cu12>=12.5,<12.6; sys_platform == 'linux' and platform_machine == 'x86_64'",
+]
+dev = [
+    "pytest>=8.0.1",
+    "pytest-cov>=6.0.0",
+    "pytest-mock>=3.14.0,<4.0.0",
+    "pytest-asyncio>=1.1.0,<2.0.0",
+    "mypy>=1.11.1,<2.0.0",
+    "ruff>=0.9.3,<1.0.0",
+    "pre-commit>=4.2.0,<5.0.0",
+    "icecream>=2.1.4",
+    "mkdocs>=1.6.1,<2.0.0",
+    "mkdocs-material>=9.6.12,<10.0.0",
+    "mkdocstrings-python>=1.16.10,<2.0.0",
+    "pyyaml>=6.0.1,<7.0.0",
+    "rundoc>=0.2.3,<0.3.0",
+    "hypothesis>=6.150.2,<7.0.0",
+    "griffe>=1.7.3,<2.0.0"
+]
+
+[[tool.uv.index]]
+name = "pypi"
+url = "https://pypi.org/simple"
+default = true
+
+[tool.uv]
+conflicts = [[{ extra = "cpu" }, { extra = "cuda" }]]
+
+[tool.uv.sources]
+llama-cpp-python = [
+    { index = "pypi", extra = "cpu" },
+    { url = "https://files.pythonhosted.org/packages/ec/e9/e7de2b0463ea3ffbf0ede6cb21b58c1258a8f6521aae45ca773a59fe7cf3/llama_cpp_python-0.3.36.tar.gz", extra = "cuda", marker = "sys_platform == 'linux' and platform_machine == 'x86_64'" },
+    { index = "pypi", extra = "cuda", marker = "sys_platform != 'linux' or platform_machine != 'x86_64'" },
+]
+
+[project.urls]
+Repository = "https://github.com/habedi/template-agentic-project-python"
+Documentation = "https://github.com/habedi/template-agentic-project-python/blob/main/docs/index.md"
+
+[tool.hatch.build.targets.wheel]
+packages = ["agents"]
+
+[build-system]
+requires = ["hatchling>=1.20"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = [
+    "--tb=short",
+    "--cov=agents",
+    "--cov-branch",
+    "--cov-report=term",
+    "--cov-report=xml",
+    "-rs"
+]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+asyncio_default_test_loop_scope = "function"
+
+[tool.coverage.run]
+branch = true
+parallel = true
+source = ["agents"]
+omit = ["tests/*"]
+
+[tool.coverage.report]
+show_missing = false
+skip_empty = true
+precision = 2
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+disallow_untyped_defs = true
+disallow_untyped_calls = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+warn_return_any = true
+strict_optional = true
+warn_redundant_casts = true
+exclude = "^(benches/|examples/)"
+
+[tool.ruff]
+exclude = [
+    ".bzr", ".direnv", ".eggs", ".git", ".git-rewrite", ".hg", ".mypy_cache",
+    ".nox", ".pants.d", ".pytype", ".ruff_cache", ".svn", ".tox", ".venv",
+    "__pypackages__", "_build", "buck-out", "build", "dist", "node_modules",
+    "venv", ".adk"
+]
+line-length = 100
+indent-width = 4
+src = ["agents"]
+target-version = "py311"
+unsafe-fixes = false
+
+[tool.ruff.lint]
+select = ["ANN", "E", "F", "I", "W", "B", "RUF", "SIM", "C90"]
+ignore = ["D100", "D101", "D102", "D103", "D104", "D105", "D106", "D107"]
+fixable = ["ALL"]
+unfixable = []
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["ANN"]
