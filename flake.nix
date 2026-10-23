@@ -20,7 +20,7 @@
           name = "template-agentic-project-dev";
 
           packages = with pkgs; [
-            python311
+            python314
             uv
             gnumake
             stdenv.cc
@@ -28,7 +28,7 @@
             ninja
           ];
 
-          UV_PYTHON = "${pkgs.python311}/bin/python3";
+          UV_PYTHON = "${pkgs.python314}/bin/python3";
           UV_PYTHON_DOWNLOADS = "never";
 
           # Native wheels require runtime libraries and access to host GPU drivers.
